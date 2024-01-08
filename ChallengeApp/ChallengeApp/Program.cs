@@ -1,8 +1,8 @@
 ﻿using ChallengeApp;
 
-Employee user1 = new Employee("Tymek", "Malesiński", 56);
-Employee user2 = new Employee("Dariusz", "Bąk", 50);
-Employee user3 = new Employee("Zosia", "Samosia", 24);
+Employee user1 = new Employee("Tymek", "Malesiński", 20);
+Employee user2 = new Employee("Dariusz", "Bąk", 20);
+Employee user3 = new Employee("Zosia", "Samosia", 20);
 
 user1.AddScore(5);
 user1.AddScore(2);
