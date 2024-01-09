@@ -3,11 +3,11 @@
     internal class TypeTests
     {
         [Test]
-        public void VARTEST()
+        public void VarTypeTest()
         {
             // arrange
-            var employee1 = new Employee("Maciej", "Juzek", 21);
-            var employee2 = new Employee("Maciej", "Juzek", 21);
+            var employee1 = new User("Maciej", "Juzek", 21);
+            var employee2 = new User("Maciej", "Juzek", 21);
 
             // assert
             Assert.AreNotEqual(employee1, employee2);
@@ -15,7 +15,7 @@
         }
 
         [Test]
-        public void INTTEST()
+        public void IntTypeTest()
         {
             // arrange
             int number1 = 1;
@@ -26,7 +26,7 @@
         }
 
         [Test]
-        public void FLOATTEST()
+        public void FloatTypeTest()
         {
             // arrange
             float lenght1 = 3.3F;
@@ -38,7 +38,7 @@
         }
 
         [Test]
-        public void STRINGTEST()
+        public void StringTypeTest()
         {
             // arrange
             string name1 = "Eugenia";
@@ -49,7 +49,7 @@
         }
 
         [Test]
-        public void DOUBLETEST()
+        public void DoubleTypeTest()
         {
             // arrange
             double number1 = 1.11;
