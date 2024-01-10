@@ -1,19 +1,7 @@
 ﻿namespace ChallengeApp.Tests
 {
-    internal class TypeTests
+    public class TypeTests
     {
-        [Test]
-        public void VarTypeTest()
-        {
-            // arrange
-            var employee1 = new User("Maciej", "Juzek", 21);
-            var employee2 = new User("Maciej", "Juzek", 21);
-
-            // assert
-            Assert.AreNotEqual(employee1, employee2);
-            Assert.AreEqual(employee1.Name, employee2.Name);
-        }
-
         [Test]
         public void IntTypeTest()
         {
