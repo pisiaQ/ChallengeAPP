@@ -1,22 +1,35 @@
-﻿using System.Diagnostics;
-
-namespace ChallengeApp
+﻿namespace ChallengeApp
 {
     public class Employee
     {
-        public List<float> grades = new List<float>();
+        private List<float> grades = new List<float>();
 
-        public Employee()
-        {  
+        public Employee(string name, string surname, int age)
+        {
+            this.Name = name;
+            this.Surname = surname;
+            this.Age = age;
         }
+
         public Employee(string name, string surname)
         {
             this.Name = name;
             this.Surname = surname;
+            this.Age = -1;
+        }
+
+        public Employee()
+        {
+            this.Name = "Test";
+            this.Surname = "Test";
+            this.Age = -1;
         }
 
         public string Name { get; private set; }
+
         public string Surname { get; private set; }
+
+        public int Age { get; private set; }
 
         public void AddGrade(float grade)
         {
@@ -26,7 +39,7 @@ namespace ChallengeApp
             }
             else
             {
-                Console.WriteLine("invalid grade value");
+                throw new Exception($"Grade value: {grade} is out of range");
             }
         }
 
@@ -36,62 +49,43 @@ namespace ChallengeApp
             {
                 this.AddGrade(result);
             }
+            else if (grade.Length == 1)
+            {
+                AddGrade((char)grade[0]);
+            }
             else
             {
-                Console.WriteLine("String is not float");
+                throw new Exception($"String: {grade} is not float");
             }
         }
 
         public void AddGrade(char grade)
         {
-            switch(grade)
+            switch (char.ToUpper(grade))
             {
                 case 'A':
-                case 'a':
-                    this.grades.Add(100);
+                    this.AddGrade(100);
                     break;
                 case 'B':
-                case 'b':
-                    this.grades.Add(80);
+                    this.AddGrade(80);
                     break;
                 case 'C':
-                case 'c':
-                    this.grades.Add(60);
+                    this.AddGrade(60);
                     break;
                 case 'D':
-                case 'd':
-                    this.grades.Add(40);
+                    this.AddGrade(40);
                     break;
                 case 'E':
-                case 'e':
-                    this.grades.Add(20);
+                    this.AddGrade(20);
                     break;
                 default:
-                    Console.WriteLine("Wrong Letter");
-                    break;
+                    throw new Exception($"Wrong Letter: {grade}");
             }
-        }
-
-        public void AddGrade(double grade)
-        {
-            float valueInFloat = (float)grade;
-            this.AddGrade(valueInFloat);
-        }
-
-        public void AddGrade(long grade)
-        {
-            float valueInLong = (float)grade;
-            this.AddGrade(valueInLong);
-        }
-        public void AddGrade(decimal grade)
-        {
-            float valueInLong = (float)grade;
-            this.AddGrade(valueInLong);
         }
 
         public Statistics GetStatistics()
         {
-            var statistics = new Statistics();
+            Statistics statistics = new Statistics();
             statistics.Average = 0;
             statistics.Max = float.MinValue;
             statistics.Min = float.MaxValue;
@@ -106,16 +100,16 @@ namespace ChallengeApp
 
             switch (statistics.Average)
             {
-                case var average when average >= 90:
+                case var average when average > 80:
                     statistics.AverageLetter = 'A';
                     break;
-                case var average when average >= 60:
+                case var average when average > 60:
                     statistics.AverageLetter = 'B';
                     break;
-                case var average when average >= 40:
+                case var average when average > 40:
                     statistics.AverageLetter = 'C';
                     break;
-                case var average when average >= 20:
+                case var average when average > 20:
                     statistics.AverageLetter = 'D';
                     break;
                 default:
@@ -124,7 +118,6 @@ namespace ChallengeApp
             }
 
             return statistics;
-
         }
     }
 }
