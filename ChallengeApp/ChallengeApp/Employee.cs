@@ -11,20 +11,6 @@
             this.Age = age;
         }
 
-        public Employee(string name, string surname)
-        {
-            this.Name = name;
-            this.Surname = surname;
-            this.Age = -1;
-        }
-
-        public Employee()
-        {
-            this.Name = "Test";
-            this.Surname = "Test";
-            this.Age = -1;
-        }
-
         public string Name { get; private set; }
 
         public string Surname { get; private set; }
