@@ -1,12 +1,19 @@
 ﻿namespace ChallengeApp
 {
-    public class Employee : Person
+    public class Employee : IEmployee
     {
         private List<float> grades = new List<float>();
-        public Employee(string name, string surname, string sex)
-            :base(name, surname, sex)
+        public Employee(string name, string surname, string sex, int age)
         {
+            this.Surname = surname;
+            this.Name = name;
+            this.Sex = sex;
         }
+        public string Name { get; private set; }
+        public string Surname { get; private set; }
+        public string Sex { get; private set; }
+        public int Age { get; private set; }
+
         public void AddGrade(float grade)
         {
             if (grade >= 0 && grade <= 100)
@@ -57,6 +64,19 @@
                     throw new Exception($"Wrong Letter: {grade}");
             }
         }
+
+        public void AddGrade(double grade)
+        {
+            float gradeAsFloat = (float)grade;
+            this.AddGrade(gradeAsFloat);
+        }
+
+        public void AddGrade(int grade)
+        {
+            float gradeAsFloat = (float)grade;
+            this.AddGrade(gradeAsFloat);
+        }
+
         public Statistics GetStatistics()
         {
             Statistics statistics = new Statistics();
