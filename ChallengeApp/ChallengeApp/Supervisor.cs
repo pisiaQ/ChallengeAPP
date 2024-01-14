@@ -5,6 +5,7 @@
         public string Name => "Łukasz";
         public string Surname => "Pisiak";
         public string Sex => "Men";
+        public int Age => (22);
 
         public void AddGrade(float grade)
         {

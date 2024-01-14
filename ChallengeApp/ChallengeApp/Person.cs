@@ -7,6 +7,7 @@
             this.Surname = surname;
             this.Name = name;
             this.Sex = sex;
+            this.Age = age;
         }
         public string Name { get; private set; }
         public string Surname { get; private set; }
