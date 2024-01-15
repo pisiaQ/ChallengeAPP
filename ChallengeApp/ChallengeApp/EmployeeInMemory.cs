@@ -2,109 +2,124 @@
 {
     public class EmployeeInMemory : EmployeeBase // : IEmployee
     {
+        public override event GradeAddedDelegate GradeAdded;
+
         private List<float> grades = new List<float>();
         public EmployeeInMemory(string name, string surname, string sex, int age)
             : base(name, surname, sex, age)
         {
+
+        }
+
+        public override void AddGrade(double grade)
+        {
+            this.AddGrade((int)grade);
         }
 
         public override void AddGrade(float grade)
         {
-            if (grade >= 0 && grade <= 100)
-            {
-                this.grades.Add(grade);
-            }
-            else
-            {
-                throw new Exception($"Grade value: {grade} is out of range");
-            }
+            this.AddGrade((int)grade);
         }
 
+        public override void AddGrade(int grade)
+        {
+            {
+                if (grade >= 0 && grade <= 100)
+                {
+                    this.grades.Add(grade);
+                    if (GradeAdded != null)
+                    {
+                        GradeAdded(this, new EventArgs());
+                    }
+                }
+                else
+                {
+                    throw new Exception("Invailid grade Value.");
+                }
+            }
+        }
         public override void AddGrade(string grade)
         {
             if (float.TryParse(grade, out float result))
             {
                 this.AddGrade(result);
             }
-            else if (grade.Length == 1)
-            {
-                AddGrade((char)grade[0]);
-            }
             else
             {
-                throw new Exception($"String: {grade} is not float");
+                if (grade.Length == 1)
+                {
+                    AddGrade(grade[0]);
+
+                }
+                else
+                {
+                    throw new Exception("Invalid Grade");
+                }
             }
         }
+
+
         public override void AddGrade(char grade)
         {
-            switch (char.ToUpper(grade))
+            switch (grade)
             {
-                case 'A':
-                    this.AddGrade(100);
+                case 'A' or 'a':
+                    AddGrade(100.0f);
                     break;
-                case 'B':
-                    this.AddGrade(80);
+                case 'B' or 'b':
+                    AddGrade(80.0f);
                     break;
-                case 'C':
-                    this.AddGrade(60);
+                case 'C' or 'c':
+                    AddGrade(60.0f);
                     break;
-                case 'D':
-                    this.AddGrade(40);
+                case 'D' or 'd':
+                    AddGrade(40.0f);
                     break;
-                case 'E':
-                    this.AddGrade(20);
+                case 'E' or 'e':
+                    AddGrade(20.0f);
                     break;
                 default:
-                    throw new Exception($"Wrong Letter: {grade}");
+                    throw new Exception("Wrong Letter. Write Letter between A and E or a and e");
             }
-        }
-
-        public override void AddGrade(double grade)
-        {
-            float gradeAsFloat = (float)grade;
-            this.AddGrade(gradeAsFloat);
-        }
-
-        public override void AddGrade(int grade)
-        {
-            float gradeAsFloat = (float)grade;
-            this.AddGrade(gradeAsFloat);
         }
 
         public override Statistics GetStatistics()
+
         {
-            Statistics statistics = new Statistics();
+            var statistics = new Statistics();
             statistics.Average = 0;
             statistics.Max = float.MinValue;
             statistics.Min = float.MaxValue;
 
             foreach (var grade in this.grades)
             {
-                statistics.Max = Math.Max(statistics.Max, grade);
-                statistics.Min = Math.Min(statistics.Min, grade);
-                statistics.Average += grade;
+                if (grade >= 0)
+                {
+                    statistics.Max = Math.Max(statistics.Max, grade);
+                    statistics.Min = Math.Min(statistics.Min, grade);
+                    statistics.Average += grade;
+                }
             }
             statistics.Average /= this.grades.Count;
 
             switch (statistics.Average)
             {
-                case var average when average > 80:
+                case var Average when Average >= 80:
                     statistics.AverageLetter = 'A';
                     break;
-                case var average when average > 60:
+                case var Average when Average >= 60:
                     statistics.AverageLetter = 'B';
                     break;
-                case var average when average > 40:
+                case var Average when Average >= 40:
                     statistics.AverageLetter = 'C';
                     break;
-                case var average when average > 20:
+                case var Average when Average >= 20:
                     statistics.AverageLetter = 'D';
                     break;
                 default:
                     statistics.AverageLetter = 'E';
                     break;
             }
-
             return statistics;
         }
     }

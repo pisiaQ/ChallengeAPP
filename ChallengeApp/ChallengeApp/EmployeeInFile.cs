@@ -2,7 +2,12 @@
 {
     public class EmployeeInFile : EmployeeBase
     {
+        public override event GradeAddedDelegate GradeAdded;
+
+        private List<float> grades = new List<float>();
+
         private const string fileName = "grades.txt";
+
         public EmployeeInFile(string name, string surname, string sex, int age) 
             : base(name, surname, sex, age)
         {
@@ -25,14 +30,15 @@
             {
                 if (grade >= 0 && grade <= 100)
                 {
-                    using (var writer = File.AppendText(fileName))
+                    this.grades.Add(grade);
+                    if (GradeAdded != null)
                     {
-                        writer.WriteLine(grade);
+                        GradeAdded(this, new EventArgs());
                     }
                 }
                 else
                 {
-                    throw new Exception("Invailid grade Value.");
+                    throw new Exception("Invailid grade Value. Add between 0 and 100");
                 }
             }
         }
@@ -51,7 +57,7 @@
                 }
                 else
                 {
-                    throw new Exception("Invalid Grade Value.");
+                    throw new Exception("Invalid Grade");
                 }
             }
         }
@@ -61,34 +67,35 @@
             switch (grade)
             {
                 case 'A' or 'a':
-                    AddGrade(100);
+                    AddGrade(100.0f);
                     break;
                 case 'B' or 'b':
-                    AddGrade(80);
+                    AddGrade(80.0f);
                     break;
                 case 'C' or 'c':
-                    AddGrade(60);
+                    AddGrade(60.0f);
                     break;
                 case 'D' or 'd':
-                    AddGrade(40);
+                    AddGrade(40.0f);
                     break;
                 case 'E' or 'e':
-                    AddGrade(20);
+                    AddGrade(20.0f);
                     break;
                 default:
-                    throw new Exception("Wrong Letter.");
+                    throw new Exception("Wrong Letter. Write Letter between A and E or a and e");
             }
         }
+
         public override Statistics GetStatistics()
         {
             var result = new Statistics();
             result.Average = 0;
             result.Max = float.MinValue;
             result.Min = float.MaxValue;
-            var numb = 0;
+            var num = 0;
             if (File.Exists(fileName))
             {
-                using (var reader = File.OpenText(fileName))
+                using (StreamReader reader = File.OpenText(fileName))
                 {
                     var line = reader.ReadLine();
                     while (line != null)
@@ -97,12 +104,13 @@
                         result.Max = Math.Max(result.Max, number);
                         result.Min = Math.Min(result.Min, number);
                         result.Average += number;
-                        numb++;
+                        num++;
                         line = reader.ReadLine();
                     }
                 }
             }
-            result.Average = result.Average / numb;
+
+            result.Average = result.Average / num;
             switch (result.Average)
             {
                 case var a when a >= 80:

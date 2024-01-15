@@ -4,11 +4,19 @@ Console.WriteLine("Witamy w Programie XYZ do oceny Pracowników");
 Console.WriteLine("-------------------------------------------");
 Console.WriteLine();
 
-var employee = new EmployeeInFile("Łukasz", "Pisiak", "M", 22);
+var employee = new EmployeeInMemory("Łukasz", "Pisiak", "Men", 22);
+employee.GradeAdded += EmployeeGradeAdded;
+employee.AddGrade(70);
+void EmployeeGradeAdded(object sender, EventArgs args)
+{
+    Console.WriteLine("Dodano nową ocenę");
+}
+
+employee.GradeAdded -= EmployeeGradeAdded;
 
 while (true)
 {
-    Console.WriteLine("Podaj kolejną ocenę pracownika: ");
+    Console.WriteLine("Podaj kolejną ocenę pracownika lub zamknij program przy pomocy litery (q): ");
     var input = Console.ReadLine();
     if(input == "q")
     {
@@ -27,6 +35,6 @@ var statistics = employee.GetStatistics();
 
 Console.WriteLine($"Average in letter: {statistics.AverageLetter}");
 Console.WriteLine($"Average: {statistics.Average}");
-Console.WriteLine($"Min: {statistics.Max}");
-Console.WriteLine($"Max: {statistics.Min}");
+Console.WriteLine($"Min: {statistics.Min}");
+Console.WriteLine($"Max: {statistics.Max}");
 
