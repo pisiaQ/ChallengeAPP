@@ -1,24 +1,22 @@
 ﻿using ChallengeApp;
 
-Console.WriteLine("Witamy w Programie XYZ do oceny Pracowników");
-Console.WriteLine("-------------------------------------------");
+Console.WriteLine("Welcome to XYZ program for employee rating!");
+Console.WriteLine("===========================================");
 Console.WriteLine();
+Console.WriteLine("Add grade to employee or press [q] to exit the program and display statistics:");
 
-var employee = new EmployeeInMemory("Łukasz", "Pisiak", "Men", 22);
-employee.GradeAdded += EmployeeGradeAdded;
-employee.AddGrade(70);
-void EmployeeGradeAdded(object sender, EventArgs args)
+var employee = new EmployeeInFile("Łukasz", "Pisiak");
+employee.GradeAdded += EmployeGradeAded;
+
+void EmployeGradeAded(object sender, EventArgs args)
 {
-    Console.WriteLine("Dodano nową ocenę");
+    Console.WriteLine("New grade added");
 }
-
-employee.GradeAdded -= EmployeeGradeAdded;
 
 while (true)
 {
-    Console.WriteLine("Podaj kolejną ocenę pracownika lub zamknij program przy pomocy litery (q): ");
     var input = Console.ReadLine();
-    if(input == "q")
+    if (input == "q")
     {
         break;
     }
@@ -26,15 +24,16 @@ while (true)
     {
         employee.AddGrade(input);
     }
-    catch(Exception e)
+    catch (Exception e)
     {
-        Console.WriteLine($"Exception catched: {e.Message}");
+        Console.WriteLine($"Something went wrong: {e.Message}");
     }
 }
-var statistics = employee.GetStatistics();
 
-Console.WriteLine($"Average in letter: {statistics.AverageLetter}");
+var statistics = employee.GetStatistics();
+Console.WriteLine($"AverageLetter: {statistics.AverageLetter}");
 Console.WriteLine($"Average: {statistics.Average}");
 Console.WriteLine($"Min: {statistics.Min}");
 Console.WriteLine($"Max: {statistics.Max}");
 
+//test

@@ -1,136 +1,123 @@
 ﻿namespace ChallengeApp
 {
-    public class EmployeeInFile : EmployeeBase
+    public class EmployeeInFile : EmployeBase
     {
-        public override event GradeAddedDelegate GradeAdded;
-
-        private List<float> grades = new List<float>();
 
         private const string fileName = "grades.txt";
 
-        public EmployeeInFile(string name, string surname, string sex, int age) 
-            : base(name, surname, sex, age)
-        {
-        }
+        public event GradeAddedDelegate GradeAdded;
 
-        public override void AddGrade(double grade)
+        public EmployeeInFile(string name, string surname)
+             : base(name, surname)
         {
-            var valueInInt = (int)grade;
-            this.AddGrade(valueInInt);
         }
 
         public override void AddGrade(float grade)
         {
-            var valueInInt = (int)grade;
-            this.AddGrade(valueInInt);
+            if (grade >= 0 && grade <= 100)
+            {
+                using (var writer = File.AppendText(fileName))
+                {
+                    writer.WriteLine(grade);
+                }
+                if (GradeAdded != null)
+                {
+                    GradeAdded(this, new EventArgs());
+                }
+            }
+            else
+            {
+                throw new Exception("invalid grade value");
+            }
+        }
+
+        public override void AddGrade(double grade)
+        {
+            float gradeAsfloat = (float)grade;
+            AddGrade(gradeAsfloat);
         }
 
         public override void AddGrade(int grade)
         {
-            {
-                if (grade >= 0 && grade <= 100)
-                {
-                    this.grades.Add(grade);
-                    if (GradeAdded != null)
-                    {
-                        GradeAdded(this, new EventArgs());
-                    }
-                }
-                else
-                {
-                    throw new Exception("Invailid grade Value. Add between 0 and 100");
-                }
-            }
+            float gradeAsfloat = (float)grade;
+            AddGrade(gradeAsfloat);
         }
-
-        public override void AddGrade(string grade)
-        {
-            if (float.TryParse(grade, out float result))
-            {
-                this.AddGrade(result);
-            }
-            else
-            {
-                if (grade.Length == 1)
-                {
-                    AddGrade(grade[0]);
-                }
-                else
-                {
-                    throw new Exception("Invalid Grade");
-                }
-            }
-        }
-
         public override void AddGrade(char grade)
         {
             switch (grade)
             {
-                case 'A' or 'a':
-                    AddGrade(100.0f);
+                case 'A':
+                case 'a':
+                    AddGrade(100);
                     break;
-                case 'B' or 'b':
-                    AddGrade(80.0f);
+                case 'B':
+                case 'b':
+                    AddGrade(80);
                     break;
-                case 'C' or 'c':
-                    AddGrade(60.0f);
+                case 'C':
+                case 'c':
+                    AddGrade(60);
                     break;
-                case 'D' or 'd':
-                    AddGrade(40.0f);
+                case 'D':
+                case 'd':
+                    AddGrade(40);
                     break;
-                case 'E' or 'e':
-                    AddGrade(20.0f);
+                case 'E':
+                case 'e':
+                    AddGrade(20);
                     break;
                 default:
-                    throw new Exception("Wrong Letter. Write Letter between A and E or a and e");
+                    throw new Exception("Wrong Letter");
+            }
+        }
+        public override void AddGrade(string grade)
+        {
+            if (float.TryParse(grade, out float result))
+            {
+                AddGrade(result);
+            }
+            else if (char.TryParse(grade, out char charGrade))
+            {
+                throw new Exception("String in not float");
             }
         }
 
         public override Statistics GetStatistics()
         {
-            var result = new Statistics();
-            result.Average = 0;
-            result.Max = float.MinValue;
-            result.Min = float.MaxValue;
-            var num = 0;
+            var gradesFromfile = this.ReadGradesFromFile();
+            var result = this.CountStatistics(gradesFromfile);
+            return result;
+        }
+        private List<float> ReadGradesFromFile()
+        {
+            var grades = new List<float>();
             if (File.Exists(fileName))
             {
-                using (StreamReader reader = File.OpenText(fileName))
+                using (var reader = File.OpenText($"{fileName}"))
                 {
                     var line = reader.ReadLine();
                     while (line != null)
                     {
                         var number = float.Parse(line);
-                        result.Max = Math.Max(result.Max, number);
-                        result.Min = Math.Min(result.Min, number);
-                        result.Average += number;
-                        num++;
+                        grades.Add(number);
                         line = reader.ReadLine();
                     }
                 }
             }
-
-            result.Average = result.Average / num;
-            switch (result.Average)
-            {
-                case var a when a >= 80:
-                    result.AverageLetter = 'A';
-                    break;
-                case var a when a >= 60:
-                    result.AverageLetter = 'B';
-                    break;
-                case var a when a >= 40:
-                    result.AverageLetter = 'C';
-                    break;
-                case var a when a >= 20:
-                    result.AverageLetter = 'D';
-                    break;
-                default:
-                    result.AverageLetter = 'E';
-                    break;
-            }
-            return result;
+            return grades;
         }
+        public Statistics CountStatistics(List<float> grades)
+        {
+            {
+                var statistics = new Statistics();
 
+                foreach (var grade in grades)
+                {
+                    statistics.AddGrade(grade);
+                }
+
+                return statistics;
+            }
+        }
     }
 }
